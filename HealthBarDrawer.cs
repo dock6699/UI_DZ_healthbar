@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class HealthBarDrawer : MonoBehaviour
 {
     [SerializeField] private Slider _healthBarSlider;
-    [SerializeField] private HealthBar _healthBar;
+    [SerializeField] private Health _healthBar;
 
     private float _currentSliderValue;
     private float _newSliderValue;
@@ -51,7 +51,7 @@ public class HealthBarDrawer : MonoBehaviour
     private void RewriteHealthValues()
     {
         _maxHealth = _healthBar.MaxHealth;
-        _health = _healthBar.Health;
+        _health = _healthBar.CurrentHealth;
         WriteSliderValues();
     }
 }
