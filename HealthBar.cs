@@ -1,59 +1,57 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    [SerializeField] private float _damage;
-    [SerializeField] private float _heal;
-    [SerializeField] private float _maxHealth;
+    [SerializeField] private Slider _healthBarSlider;
+    [SerializeField] private Health _healthBar;
 
-    public event UnityAction OnHealthChanged;
-
+    private float _currentSliderValue;
+    private float _newSliderValue;
+    private float _maxHealth;
     private float _health;
-    public float MaxHealth => _maxHealth;
-    public float Health => _health;
 
-    private void Awake()
+    private void OnEnable()
     {
-        _health = _maxHealth;
+        _healthBar.HealthChanged += RewriteHealthValues;
     }
-    public void TakeDamage()
+    private void OnDisable()
     {
-        if (_health >= _damage)
-        {
-            _health = ChangeHealth(-_damage);
-            OnHealthChanged?.Invoke();
-        }
-        else
-        {
-            _health = 0;
-            OnHealthChanged?.Invoke();
-        }
+        _healthBar.HealthChanged -= RewriteHealthValues;
     }
 
-    public void Heal()
+    private void Start()
     {
-        if (_health < _maxHealth)
+        _healthBarSlider.value = 1;
+        RewriteHealthValues();
+    }
+
+    private void Update()
+    {
+        RefreshHealthBar();
+    }
+
+    private void RefreshHealthBar()
+    {
+        if (_currentSliderValue != _newSliderValue)
         {
-            _health = ChangeHealth(_heal);
-            OnHealthChanged?.Invoke();
-        }
-        else
-        {
-            _health = _maxHealth;
-            OnHealthChanged?.Invoke();
+            _healthBarSlider.value = Mathf.MoveTowards(_currentSliderValue, _newSliderValue, 0.5f * Time.deltaTime);
+            WriteSliderValues();
         }
     }
 
-    private float ChangeHealth(float value)
+    private void WriteSliderValues()
     {
-        float newHealthValue;
-        newHealthValue = _health + value;
-        return newHealthValue;
+        _currentSliderValue = _healthBarSlider.value;
+        _newSliderValue = _health / _maxHealth;
     }
 
-
+    private void RewriteHealthValues()
+    {
+        _maxHealth = _healthBar.MaxHealth;
+        _health = _healthBar.CurrentHealth;
+        WriteSliderValues();
+    }
 }

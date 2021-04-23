@@ -14,8 +14,8 @@ public class Health : MonoBehaviour
     public float MaxHealth => _maxHealth;
     public float CurrentHealth => _health;
 
-   
-    public event UnityAction OnHealthChanged;
+
+    public event UnityAction HealthChanged;
 
     private void Awake()
     {
@@ -26,13 +26,12 @@ public class Health : MonoBehaviour
         if (_health >= _damage)
         {
             _health = ChangeHealth(-_damage);
-            OnHealthChanged?.Invoke();
         }
         else
         {
             _health = 0;
-            OnHealthChanged?.Invoke();
         }
+        HealthChanged?.Invoke();
     }
 
     public void Heal()
@@ -40,13 +39,12 @@ public class Health : MonoBehaviour
         if (_health < _maxHealth)
         {
             _health = ChangeHealth(_heal);
-            OnHealthChanged?.Invoke();
         }
         else
         {
             _health = _maxHealth;
-            OnHealthChanged?.Invoke();
         }
+        HealthChanged?.Invoke();
     }
 
     private float ChangeHealth(float value)
