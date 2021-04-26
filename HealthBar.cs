@@ -15,17 +15,17 @@ public class HealthBar : MonoBehaviour
 
     private void OnEnable()
     {
-        _healthBar.HealthChanged += RewriteHealthValues;
+        _healthBar.HealthChanged += OnHealthChanged;
     }
     private void OnDisable()
     {
-        _healthBar.HealthChanged -= RewriteHealthValues;
+        _healthBar.HealthChanged -= OnHealthChanged;
     }
 
     private void Start()
     {
         _healthBarSlider.value = 1;
-        RewriteHealthValues();
+        OnHealthChanged();
     }
 
     private void Update()
@@ -48,7 +48,7 @@ public class HealthBar : MonoBehaviour
         _newSliderValue = _health / _maxHealth;
     }
 
-    private void RewriteHealthValues()
+    private void OnHealthChanged()
     {
         _maxHealth = _healthBar.MaxHealth;
         _health = _healthBar.CurrentHealth;
